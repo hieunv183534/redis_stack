@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  #database section
+  testdb:
+    container_name: testdb
+    restart: always
+    ports:
+      - "6379:6379"
+      - "8001:8001"
+  
+  #microservices api sections
+  test.api:
+    container_name: test.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - "CacheSettings:ConnectionString=testdb:6379"
+    depends_on: 
+      - testdb
+    ports:
+      - "10000:80"
+    restart: always
+    
+  
